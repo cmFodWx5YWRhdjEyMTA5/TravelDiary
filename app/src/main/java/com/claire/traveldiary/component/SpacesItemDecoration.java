@@ -1,29 +1,42 @@
 package com.claire.traveldiary.component;
 
 import android.graphics.Rect;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
-    private int space;
+    private int spanCount;
+    private int spacing;
+    private boolean includeEdge;
 
-    public SpacesItemDecoration(int space) {
-        this.space=space;
+    public SpacesItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+        this.spanCount = spanCount;
+        this.spacing = spacing;
+        this.includeEdge = includeEdge;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        outRect.left = space;
-        outRect.right = space;
-        outRect.bottom = space;
+        int position = parent.getChildAdapterPosition(view);
+        int column = position % spanCount;
 
-        // Add top margin only for the first item to avoid double space between items
-        if (parent.getChildLayoutPosition(view) == 0) {
-            outRect.top = space;
+        if (includeEdge) {
+            outRect.left = spacing - column * spacing / spanCount;
+            outRect.right = (column + 1) * spacing / spanCount;
+
+            if (position < spanCount) {
+                outRect.top = 0;
+            }
+            outRect.bottom = 0;
         } else {
-            outRect.top = 0;
+            outRect.left = spacing - column * spacing / spanCount;
+            outRect.right = (column + 1) * spacing / spanCount;
+            if (position >= spanCount) {
+                outRect.top = 0;
+            }
         }
     }
-
 }

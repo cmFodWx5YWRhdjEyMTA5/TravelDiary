@@ -37,4 +37,6 @@ public class EditFragment extends Fragment implements EditContract.View{
 
         return root;
     }
+
+
 }

@@ -34,6 +34,15 @@
 
         </android.support.v7.widget.SearchView>
 
+        <ImageButton
+            android:id="@+id/toolbar_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_back_arrow"
+            android:visibility="gone"
+            tools:layout_editor_absoluteX="72dp"
+            tools:layout_editor_absoluteY="15dp" />
+
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"

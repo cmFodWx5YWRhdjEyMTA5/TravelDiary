@@ -19,4 +19,25 @@ public class EditPresenter implements EditContract.Presenter {
     public void start() {
 
     }
+
+    @Override
+    public void result(int requestCode, int resultCode) {
+
+    }
+
+    @Override
+    public void editDiary() {
+
+    }
+
+    @Override
+    public void saveDiary() {
+
+    }
+
+    @Override
+    public void finishEdit() {
+
+
+    }
 }

@@ -32,6 +32,7 @@ public class MainActivity extends BaseActivity {
     private TextView mToolbarTitle;
     private SearchView mToolbarSearch;
     private ImageButton mToolbarMenu;
+    private ImageButton mToolbarBack;
 
 
 
@@ -61,9 +62,15 @@ public class MainActivity extends BaseActivity {
         mToolbar = findViewById(R.id.toolbar);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mToolbarSearch = findViewById(R.id.toolbar_search);
+        mToolbarBack = findViewById(R.id.toolbar_back);
+        mToolbarBack.setOnClickListener(v -> {
+            openMainPage();
+            updateToolbar(getResources().getString(R.string.toolbar_title));
+        });
         mToolbarMenu = findViewById(R.id.toolbar_menu);
         mToolbarMenu.setOnClickListener(v -> {
             openSettings();
+            updateToolbar("");
         });
 
         setSupportActionBar(mToolbar);
@@ -144,7 +151,7 @@ public class MainActivity extends BaseActivity {
 
     private void openSettings() {
 
-        hideBottomNavigation();
+        //hideBottomNavigation();
 
         SettingsFragment settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag("Settings");
 
@@ -160,10 +167,15 @@ public class MainActivity extends BaseActivity {
         if ("".equals(title)) {
             mToolbarTitle.setVisibility(View.GONE);
             mToolbarSearch.setVisibility(View.GONE);
+            mToolbarBack.setVisibility(View.VISIBLE);
+            mToolbarMenu.setVisibility(View.GONE);
         } else {
             mToolbarTitle.setVisibility(View.VISIBLE);
             mToolbarSearch.setVisibility(View.VISIBLE);
+            mToolbarBack.setVisibility(View.GONE);
+            mToolbarMenu.setVisibility(View.VISIBLE);
             mToolbarTitle.setText(title);
+
         }
     }
 
@@ -174,6 +186,8 @@ public class MainActivity extends BaseActivity {
     public void showBottomNavigation() {
         mBottomNavigation.setVisibility(View.VISIBLE);
     }
+
+
 
     @Override
     public void onBackPressed() {

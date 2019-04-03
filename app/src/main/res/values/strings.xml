@@ -4,4 +4,9 @@
     //main page
     <string name="toolbar_title">Memories</string>
     <string name="search_hint">search here....</string>
+
+    //item_card
+    <string name="diary_title">Travel</string>
+    <string name="diary_date">16th January 2019</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

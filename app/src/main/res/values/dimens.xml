@@ -6,5 +6,5 @@
 
     <!-- Bottom Navigation -->
     <dimen name="height_bottom_navigation_main">50dp</dimen>
-    <dimen name="size_bottom_nav_icon">50dp</dimen>
+    <dimen name="size_bottom_nav_icon">32dp</dimen>
 </resources>

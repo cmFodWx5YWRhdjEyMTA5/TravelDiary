@@ -19,4 +19,9 @@ public class MainPagePresenter implements MainPageContract.Presenter {
     public void start() {
 
     }
+
+    @Override
+    public void result(int requestCode, int resultCode) {
+
+    }
 }
