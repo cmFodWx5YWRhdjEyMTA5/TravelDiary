@@ -1,5 +1,6 @@
 package com.claire.traveldiary;
 
+import android.content.Intent;
 import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,8 +15,11 @@ import com.claire.traveldiary.edit.EditFragment;
 import com.claire.traveldiary.edit.EditPresenter;
 import com.claire.traveldiary.mainpage.MainPageFragment;
 import com.claire.traveldiary.mainpage.MainPagePresenter;
+import com.claire.traveldiary.map.MapFragment;
+import com.claire.traveldiary.map.MapPresenter;
 import com.claire.traveldiary.settings.SettingsFragment;
 import com.claire.traveldiary.settings.SettingsPresenter;
+import com.google.android.gms.maps.SupportMapFragment;
 
 
 public class MainActivity extends BaseActivity {
@@ -23,6 +27,7 @@ public class MainActivity extends BaseActivity {
     private MainPagePresenter mMainPagePresenter;
     private EditPresenter mEditPresenter;
     private SettingsPresenter mSettingsPresenter;
+    private MapPresenter mMapPresenter;
 
     //BottomNavigation
     private BottomNavigationView mBottomNavigation;
@@ -79,6 +84,12 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    private void setBottomNavigation() {
+        mBottomNavigation = findViewById(R.id.bottom_navigation_main);
+        mBottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+    }
+
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -86,12 +97,6 @@ public class MainActivity extends BaseActivity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
-    }
-
-    private void setBottomNavigation() {
-        mBottomNavigation = findViewById(R.id.bottom_navigation_main);
-        mBottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
@@ -113,7 +118,7 @@ public class MainActivity extends BaseActivity {
             case R.id.navigation_map:
 
                 openMap();
-                //updateToolbar("");
+                updateToolbar("");
                 return true;
 
             default:
@@ -147,6 +152,16 @@ public class MainActivity extends BaseActivity {
     }
 
     private void openMap() {
+
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("Map");
+
+        if (mapFragment == null) {
+
+            MapFragment fragment = MapFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "Map").commit();
+            mMapPresenter = new MapPresenter(fragment);
+
+        }
     }
 
     private void openSettings() {
