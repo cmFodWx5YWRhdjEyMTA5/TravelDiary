@@ -5,12 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.claire.traveldiary.R;
-import com.claire.traveldiary.TravelDiaryApplication;
 
 public class MainPageAdapter extends RecyclerView.Adapter {
 
@@ -31,16 +29,15 @@ public class MainPageAdapter extends RecyclerView.Adapter {
 
             mMainImage = itemView.findViewById(R.id.main_img_card);
             mMainImage.setAlpha(0.8f);
-            mDiaryTitle = itemView.findViewById(R.id.diary_title);
+            mDiaryTitle = itemView.findViewById(R.id.edit_diary_title);
         }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         return new MainPageViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_card, parent, false));
+                .inflate(R.layout.item_mainpage_card, parent, false));
     }
 
     @Override

@@ -1,11 +1,10 @@
 package com.claire.traveldiary;
 
-import android.content.Intent;
 import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.support.v7.widget.SearchView;
 import android.widget.TextView;
@@ -19,7 +18,6 @@ import com.claire.traveldiary.map.MapFragment;
 import com.claire.traveldiary.map.MapPresenter;
 import com.claire.traveldiary.settings.SettingsFragment;
 import com.claire.traveldiary.settings.SettingsPresenter;
-import com.google.android.gms.maps.SupportMapFragment;
 
 
 public class MainActivity extends BaseActivity {
@@ -38,32 +36,24 @@ public class MainActivity extends BaseActivity {
     private SearchView mToolbarSearch;
     private ImageButton mToolbarMenu;
     private ImageButton mToolbarBack;
-
+    private Button mToolbarEdit;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
         //startActivity(new Intent(this, LaunchActivity.class));
-
         init();
-
     }
 
     private void init() {
-
         setToolbar();
         setBottomNavigation();
         openMainPage();
     }
 
-
-
     private void setToolbar() {
-
         mToolbar = findViewById(R.id.toolbar);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mToolbarSearch = findViewById(R.id.toolbar_search);
@@ -72,22 +62,23 @@ public class MainActivity extends BaseActivity {
             openMainPage();
             updateToolbar(getResources().getString(R.string.toolbar_title));
         });
+
         mToolbarMenu = findViewById(R.id.toolbar_menu);
         mToolbarMenu.setOnClickListener(v -> {
             openSettings();
             updateToolbar("");
         });
 
+        mToolbarEdit = findViewById(R.id.toolbar_edit);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
         mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-
     }
 
     private void setBottomNavigation() {
         mBottomNavigation = findViewById(R.id.bottom_navigation_main);
         mBottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
     }
 
     public int getStatusBarHeight() {
@@ -112,6 +103,7 @@ public class MainActivity extends BaseActivity {
 
                 openEdit();
                 updateToolbar("");
+                mToolbarEdit.setVisibility(View.VISIBLE);
                 return true;
 
 
@@ -127,7 +119,6 @@ public class MainActivity extends BaseActivity {
     };
 
     private void openMainPage() {
-
         MainPageFragment mainPageFragment = (MainPageFragment) getSupportFragmentManager().findFragmentByTag("MainPage");
 
         if (mainPageFragment == null) {
@@ -135,39 +126,31 @@ public class MainActivity extends BaseActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "MainPage").commit();
             mMainPagePresenter = new MainPagePresenter(fragment);
         }
-
     }
 
     private void openEdit() {
-
         EditFragment editFragment = (EditFragment) getSupportFragmentManager().findFragmentByTag("Edit");
 
         if (editFragment == null) {
             EditFragment fragment = EditFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "Edit").commit();
             mEditPresenter = new EditPresenter(fragment);
-
         }
-
     }
 
     private void openMap() {
-
         MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("Map");
 
         if (mapFragment == null) {
-
             MapFragment fragment = MapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "Map").commit();
             mMapPresenter = new MapPresenter(fragment);
-
         }
     }
 
     private void openSettings() {
 
         //hideBottomNavigation();
-
         SettingsFragment settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag("Settings");
 
         if (settingsFragment == null) {
@@ -184,15 +167,19 @@ public class MainActivity extends BaseActivity {
             mToolbarSearch.setVisibility(View.GONE);
             mToolbarBack.setVisibility(View.VISIBLE);
             mToolbarMenu.setVisibility(View.GONE);
+
+
         } else {
             mToolbarTitle.setVisibility(View.VISIBLE);
             mToolbarSearch.setVisibility(View.VISIBLE);
             mToolbarBack.setVisibility(View.GONE);
             mToolbarMenu.setVisibility(View.VISIBLE);
             mToolbarTitle.setText(title);
+            mToolbarEdit.setVisibility(View.GONE);
 
         }
     }
+
 
     public void hideBottomNavigation() {
         mBottomNavigation.setVisibility(View.GONE);

@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.claire.traveldiary.R;
-import com.claire.traveldiary.component.GridSpacingItemDecoration;
 import com.claire.traveldiary.component.SpacesItemDecoration;
 
 import static android.support.v4.util.Preconditions.checkNotNull;

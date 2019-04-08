@@ -16,14 +16,28 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:popupTheme="@style/AppTheme.PopupOverlay">
 
+        <Button
+            android:id="@+id/toolbar_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@null"
+            android:text="@string/toolbar_edit"
+            android:textColor="@color/toolbar_text"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:layout_editor_absoluteX="296dp"
+            tools:layout_editor_absoluteY="11dp" />
+
         <ImageButton
             android:id="@+id/toolbar_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/ic_menu"
             android:layout_gravity="right"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="20dp"
             />
+
 
         <android.support.v7.widget.SearchView
             android:id="@+id/toolbar_search"

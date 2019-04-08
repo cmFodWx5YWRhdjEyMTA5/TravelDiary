@@ -10,4 +10,11 @@
     <!-- Bottom Navigation -->
     <color name="bottom_nav_item_normal">#9E9E9E</color>
     <color name="bottom_nav_item_selected">#9E9E9E</color>
+
+    <!-- Edit Page -->
+    <color name="diary_title">#696969</color>
+
+    <!-- Main Page -->
+    <color name="toolbar_text">#808080</color>
+
 </resources>

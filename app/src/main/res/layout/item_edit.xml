@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/edit_diary_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        android:hint="@string/edit_diary_title_hint"
+        android:singleLine="true"
+        android:textColor="@color/diary_title"
+        android:textStyle="bold"
+        android:typeface="sans"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:cursorVisible="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_diary_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:ems="10"
+        android:hint="@string/edit_diary_date_hint"
+        android:inputType="date"
+        android:textColor="@color/diary_title"
+        android:textStyle="bold"
+        android:typeface="normal"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:cursorVisible="false"
+        app:layout_constraintEnd_toEndOf="@+id/edit_diary_title"
+        app:layout_constraintStart_toStartOf="@+id/edit_diary_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_diary_title" />
+
+    <ImageButton
+        android:id="@+id/choose_weather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:background="@mipmap/ic_sunny"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_diary_location"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_diary_location" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_gallery"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choose_weather">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <AutoCompleteTextView
+        android:id="@+id/edit_diary_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@null"
+        android:drawableLeft="@drawable/pin"
+        android:drawablePadding="8dp"
+        android:hint="@string/edit_diary_location_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_diary_date" />
+
+    <EditText
+        android:id="@+id/edit_diary_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:autoLink="all"
+        android:background="#F5F5F5"
+        android:hint="@string/edit_diary_content_hint"
+        android:lineSpacingExtra="1.2dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceLargeInverse"
+        android:textSize="14sp"
+        android:includeFontPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_gallery"
+        app:layout_constraintStart_toStartOf="@+id/edit_diary_location"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_gallery" />
+
+
+
+</android.support.constraint.ConstraintLayout>

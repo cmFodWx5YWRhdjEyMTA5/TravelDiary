@@ -4,10 +4,15 @@
     //main page
     <string name="toolbar_title">Memories</string>
     <string name="search_hint">search here....</string>
+    <string name="toolbar_edit">Edit</string>
 
     //item_card
     <string name="diary_title">Travel</string>
     <string name="diary_date">16th January 2019</string>
 
-
+    //item edit
+    <string name="edit_diary_title_hint">Your Title Here</string>
+    <string name="edit_diary_date_hint">16th January 2019</string>
+    <string name="edit_diary_location_hint">Paris, France</string>
+    <string name="edit_diary_content_hint">Your Diary Here....</string>
 </resources>
