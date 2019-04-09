@@ -49,11 +49,12 @@
         android:id="@+id/choose_weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:background="@mipmap/ic_sunny"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_diary_location"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@mipmap/ic_sunny"
+        android:background="@null"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/edit_diary_location" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_diary_date" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_gallery"
@@ -68,16 +69,15 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <AutoCompleteTextView
-        android:id="@+id/edit_diary_location"
-        android:layout_width="wrap_content"
+    <fragment
+        android:id="@+id/autocomplete_fragment"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        android:drawableLeft="@drawable/pin"
-        android:drawablePadding="8dp"
-        android:hint="@string/edit_diary_location_hint"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/choose_weather"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_diary_date" />
 
@@ -86,21 +86,39 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:autoLink="all"
         android:background="#F5F5F5"
         android:hint="@string/edit_diary_content_hint"
+        android:includeFontPadding="true"
         android:lineSpacingExtra="1.2dp"
         android:paddingLeft="8dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:textAppearance="?android:attr/textAppearanceLargeInverse"
         android:textSize="14sp"
-        android:includeFontPadding="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/recycler_gallery"
-        app:layout_constraintStart_toStartOf="@+id/edit_diary_location"
+        app:layout_constraintStart_toStartOf="@+id/recycler_gallery"
         app:layout_constraintTop_toBottomOf="@+id/recycler_gallery" />
+
+    <mabbas007.tagsedittext.TagsEditText
+        android:id="@+id/edit_tags"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:allowSpaceInTag="true"
+        android:drawableLeft="@mipmap/ic_tags"
+        android:drawablePadding="8dp"
+        app:tagsBackground="@drawable/tags_border"
+        app:tagsCloseImageRight="@mipmap/ic_close"
+        app:tagsPaddingTop="4dp"
+        app:tagsPaddingLeft="6dp"
+        app:tagsPaddingRight="4dp"
+        app:tagsCloseImagePadding="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/edit_diary_content"
+        app:layout_constraintStart_toStartOf="@+id/edit_diary_content"
+        app:layout_constraintTop_toBottomOf="@+id/edit_diary_content" />
 
 
 

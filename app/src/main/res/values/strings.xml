@@ -11,7 +11,7 @@
     <string name="diary_date">16th January 2019</string>
 
     //item edit
-    <string name="edit_diary_title_hint">Your Title Here</string>
+    <string name="edit_diary_title_hint">Title</string>
     <string name="edit_diary_date_hint">16th January 2019</string>
     <string name="edit_diary_location_hint">Paris, France</string>
     <string name="edit_diary_content_hint">Your Diary Here....</string>

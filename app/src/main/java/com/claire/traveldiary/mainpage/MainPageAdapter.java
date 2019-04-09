@@ -37,7 +37,7 @@ public class MainPageAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MainPageViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_mainpage_card, parent, false));
+                .inflate(R.layout.item_card, parent, false));
     }
 
     @Override

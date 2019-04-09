@@ -8,6 +8,7 @@ public class EditPresenter implements EditContract.Presenter {
 
     private EditContract.View mView;
 
+
     @SuppressLint("RestrictedApi")
     public EditPresenter(EditContract.View view) {
         mView = checkNotNull(view, "view cannot be null!");
@@ -26,6 +27,12 @@ public class EditPresenter implements EditContract.Presenter {
     }
 
     @Override
+    public void openWeatherDialog() {
+        mView.openWeatherDialogUi();
+    }
+
+
+    @Override
     public void editDiary() {
 
     }
@@ -35,9 +42,4 @@ public class EditPresenter implements EditContract.Presenter {
 
     }
 
-    @Override
-    public void finishEdit() {
-
-
-    }
 }

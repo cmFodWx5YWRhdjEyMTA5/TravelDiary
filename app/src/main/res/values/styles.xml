@@ -11,4 +11,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
+    <style name="WeatherDialog">
+        <item name="android:windowBackground">@color/translucent_80</item>
+    </style>
+
 </resources>

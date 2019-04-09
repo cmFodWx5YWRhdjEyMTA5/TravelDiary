@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.claire.traveldiary.base.BaseActivity;
 import com.claire.traveldiary.edit.EditFragment;
 import com.claire.traveldiary.edit.EditPresenter;
+import com.claire.traveldiary.edit.chooseweather.WeatherPresenter;
 import com.claire.traveldiary.mainpage.MainPageFragment;
 import com.claire.traveldiary.mainpage.MainPagePresenter;
 import com.claire.traveldiary.map.MapFragment;
@@ -26,6 +27,7 @@ public class MainActivity extends BaseActivity {
     private EditPresenter mEditPresenter;
     private SettingsPresenter mSettingsPresenter;
     private MapPresenter mMapPresenter;
+    private WeatherPresenter mWeatherPresenter;
 
     //BottomNavigation
     private BottomNavigationView mBottomNavigation;
@@ -190,9 +192,12 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public void finishUi() {
+        getSupportFragmentManager().popBackStack();
     }
 }

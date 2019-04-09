@@ -7,4 +7,7 @@
     <!-- Bottom Navigation -->
     <dimen name="height_bottom_navigation_main">50dp</dimen>
     <dimen name="size_bottom_nav_icon">32dp</dimen>
+
+    <!-- Gallery -->
+    <dimen name="height_gallery">250dp</dimen>
 </resources>

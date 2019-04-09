@@ -1,14 +1,11 @@
-package com.claire.traveldiary.edit;
+package com.claire.traveldiary.edit.chooseweather;
 
 import com.claire.traveldiary.base.BasePresenter;
 import com.claire.traveldiary.base.BaseView;
 
-public interface EditContract {
+public interface WeatherContract {
 
     interface View extends BaseView<Presenter> {
-
-        void openWeatherDialogUi();
-
 
     }
 
@@ -16,11 +13,6 @@ public interface EditContract {
 
         void result(int requestCode, int resultCode);
 
-        void openWeatherDialog();
-
-        void editDiary();
-
-        void saveDiary();
-
     }
+
 }
