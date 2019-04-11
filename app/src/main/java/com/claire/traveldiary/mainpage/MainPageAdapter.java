@@ -9,10 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.claire.traveldiary.R;
+import com.claire.traveldiary.data.Diary;
+
+import java.util.ArrayList;
 
 public class MainPageAdapter extends RecyclerView.Adapter {
 
     private MainPageContract.Presenter mPresenter;
+
+    private ArrayList<Diary> mDiaryList;
 
     public MainPageAdapter(MainPageContract.Presenter presenter) {
         mPresenter = presenter;

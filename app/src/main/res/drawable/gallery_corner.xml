@@ -4,5 +4,5 @@
         android:topRightRadius="12dp"
         android:bottomLeftRadius="12dp"
         android:bottomRightRadius="12dp"/>
-    <solid android:color="#F5F5F5" />
+    <solid android:color="@color/gallery_background" />
 </shape>

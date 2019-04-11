@@ -1,11 +1,10 @@
 package com.claire.traveldiary.edit;
 
-import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +12,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.claire.traveldiary.R;
-import com.claire.traveldiary.util.ImageManager;
 
 import java.util.ArrayList;
 
 public class GalleryAdapter extends RecyclerView.Adapter {
 
+    private static final String TAG = "GalleryAdapter";
+
+    private EditContract.Presenter mPresenter;
+
     private Context mContext;
     private ArrayList<String> mImages;
+    //private ImageView mImageGallery;
 
-//    public GalleryAdapter(ArrayList<String> images) {
-//        mImages = images;
-//    }
+
+    public GalleryAdapter(EditContract.Presenter presenter, ArrayList<String> images) {
+       mPresenter = presenter;
+       mImages = images;
+    }
 
     private class GalleryViewHolder extends RecyclerView.ViewHolder {
 
@@ -36,10 +41,6 @@ public class GalleryAdapter extends RecyclerView.Adapter {
 
             mImageGallery = itemView.findViewById(R.id.edit_gallery);
             mButtonAdd = itemView.findViewById(R.id.add_image);
-        }
-
-        ImageView getImageGallery() {
-            return mImageGallery;
         }
 
     }
@@ -55,25 +56,36 @@ public class GalleryAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-//        if (holder instanceof GalleryViewHolder) {
-//            if (mImages.size() > 0) {
-//
-//                ImageManager.getInstance().setImageByUrl(
-//                        ((GalleryViewHolder) holder).getImageGallery(),
-//                        mImages.get(position % mImages.size())); // Real position: position % mImages.size()
-//
-//                DisplayMetrics displayMetrics = new DisplayMetrics();
-//                ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//
-//                ((GalleryViewHolder) holder).getImageGallery().setLayoutParams(new ConstraintLayout
-//                        .LayoutParams(displayMetrics.widthPixels,
-//                        mContext.getResources().getDimensionPixelSize(R.dimen.height_gallery)));
-//            }
-//        }
+        if (holder instanceof GalleryViewHolder) {
+
+            //upload photo
+            ((GalleryViewHolder) holder).mButtonAdd.setOnClickListener(v -> {
+                mPresenter.openGallery();
+            });
+
+            if (mImages != null) {
+
+                for(int i = 0; i < mImages.size(); i++) {
+
+                    ((GalleryViewHolder) holder).mButtonAdd.setVisibility(View.INVISIBLE);
+                    ((GalleryViewHolder) holder).mImageGallery.setImageURI(Uri.parse(mImages.get(position)));
+                }
+            }
+        }
     }
+
+    public void setImage(ArrayList<String> images) {
+        mImages = images;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {
-        return 3;
+        if (mImages == null) {
+            return 1;
+        }
+        return mImages.size();
     }
+
 }

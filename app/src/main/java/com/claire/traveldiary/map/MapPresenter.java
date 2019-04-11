@@ -18,4 +18,9 @@ public class MapPresenter implements MapContract.Presenter {
     public void start() {
 
     }
+
+    @Override
+    public void result(int requestCode, int resultCode) {
+
+    }
 }

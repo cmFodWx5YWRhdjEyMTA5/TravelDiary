@@ -7,8 +7,6 @@ import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 
-import com.claire.traveldiary.R;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.MalformedInputException;

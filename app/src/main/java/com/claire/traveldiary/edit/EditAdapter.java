@@ -1,7 +1,7 @@
 package com.claire.traveldiary.edit;
 
 
-import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -14,9 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.claire.traveldiary.R;
 import com.claire.traveldiary.TravelDiaryApplication;
+import com.claire.traveldiary.data.Diary;
+import com.claire.traveldiary.data.DiaryPlace;
+import com.claire.traveldiary.data.room.DiaryDAO;
+import com.claire.traveldiary.data.room.DiaryDatabase;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -24,14 +29,19 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class EditAdapter extends RecyclerView.Adapter {
 
 
+    private static final String TAG = "EditAdapter";
+
+    private Diary mDiary;
+    private DiaryPlace mDiaryPlace;
+
     private EditContract.Presenter mPresenter;
-    private GalleryAdapter mGalleryAdapter;
 
     private Context mContext;
 
@@ -39,6 +49,12 @@ public class EditAdapter extends RecyclerView.Adapter {
     private String mImageName;
     private ImageButton mWeather;
 
+    //gallery
+    private ArrayList<String> mImagesUri;
+    private GalleryAdapter mGalleryAdapter;
+
+    //date
+    private String mStringDate;
 
 
     public EditAdapter(EditContract.Presenter presenter, Context context) {
@@ -50,9 +66,8 @@ public class EditAdapter extends RecyclerView.Adapter {
     public class EditViewHolder extends RecyclerView.ViewHolder {
 
         private RecyclerView mRecyclerGallery;
-
         private EditText mTitle;
-        private EditText mDate;
+        private TextView mDate;
         private EditText mContent;
         private mabbas007.tagsedittext.TagsEditText mTags;
 
@@ -66,11 +81,6 @@ public class EditAdapter extends RecyclerView.Adapter {
             mContent = itemView.findViewById(R.id.edit_diary_content);
             mWeather = itemView.findViewById(R.id.choose_weather);
             mTags = itemView.findViewById(R.id.edit_tags);
-
-        }
-
-        public RecyclerView getRecyclerGallery() {
-            return mRecyclerGallery;
         }
 
     }
@@ -91,15 +101,19 @@ public class EditAdapter extends RecyclerView.Adapter {
         if (holder instanceof EditViewHolder) {
 
             //Gallery
-            LinearLayoutManager layoutManager = new LinearLayoutManager(
-                    TravelDiaryApplication.getAppContext(), LinearLayoutManager.HORIZONTAL, false);
-            if(((EditViewHolder) holder).getRecyclerGallery().getOnFlingListener() == null) {
-                new LinearSnapHelper().attachToRecyclerView(((EditViewHolder) holder).getRecyclerGallery());
+            mGalleryAdapter = new GalleryAdapter(mPresenter,mImagesUri);
+            ((EditViewHolder) holder).mRecyclerGallery.setLayoutManager(new LinearLayoutManager(TravelDiaryApplication.getAppContext(),
+                    LinearLayoutManager.HORIZONTAL,false));
+            if (((EditViewHolder) holder).mRecyclerGallery.getOnFlingListener() == null) {
+                new LinearSnapHelper().attachToRecyclerView(((EditViewHolder) holder).mRecyclerGallery);
             }
-            ((EditViewHolder) holder).getRecyclerGallery().setLayoutManager(layoutManager);
-            ((EditViewHolder) holder).getRecyclerGallery()
-                    .setAdapter(new GalleryAdapter());
+            ((EditViewHolder) holder).mRecyclerGallery.setAdapter(mGalleryAdapter);
 
+            //Choose date
+            ((EditViewHolder) holder).mDate.setOnClickListener(v -> {
+                mPresenter.openDatePicker();
+            });
+            ((EditViewHolder) holder).mDate.setText(mStringDate);
 
             //Choose Location
             chooseLocation();
@@ -110,16 +124,34 @@ public class EditAdapter extends RecyclerView.Adapter {
                 mPresenter.openWeatherDialog();
             });
 
-
+            mDiary = new Diary();
+            mDiary.setTitle(((EditViewHolder) holder).mTitle.getText().toString());
+            mDiary.setDate(((EditViewHolder) holder).mDate.getText().toString());
+            mDiary.setDiaryPlace(mDiaryPlace);
+            mDiary.setWeather(mImageName);
+            mDiary.setImages(mImagesUri);
+            mDiary.setContent(((EditViewHolder) holder).mContent.getText().toString());
+            mDiary.setTags(((EditViewHolder) holder).mTags.getTags());
         }
 
     }
 
-    public void setWeatherIcon(String id) {
+
+    public void updateWeather(String id) {
         mImageName = id;
         mWeather.setImageResource(mContext.getResources().getIdentifier(mImageName,"mipmap",mContext.getPackageName()));
+    }
+
+    public void updateImage(ArrayList<String> images) {
+        mImagesUri = images;
         notifyDataSetChanged();
     }
+
+    public void updateDate(String date) {
+        mStringDate = date;
+        notifyDataSetChanged();
+    }
+
 
     private void chooseLocation() {
 
@@ -136,21 +168,34 @@ public class EditAdapter extends RecyclerView.Adapter {
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 ((FragmentActivity)mContext).getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                Log.i("TAG", "Place: " + place.getName() + ", " + place.getId());
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId() + ", " + place.getLatLng());
+                mDiaryPlace = new DiaryPlace();
+                mDiaryPlace.setPlaceId(place.getId());
+                mDiaryPlace.setPlaceName(place.getName());
+                mDiaryPlace.setLatLng(place.getLatLng());
             }
 
             @Override
             public void onError(Status status) {
                 // TODO: Handle the error.
-                Log.i("TAG", "An error occurred: " + status);
+                Log.i(TAG, "An error occurred: " + status);
             }
         });
+
+    }
+
+    public void saveDiaryDataToRoom() {
+        mPresenter.saveDiaryToRoom(mDiary);
+        Log.i(TAG, "Save! ");
+    }
+
+    public void unEditDiary() {
 
     }
 

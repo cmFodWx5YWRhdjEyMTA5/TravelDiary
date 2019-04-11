@@ -1,8 +1,13 @@
 package com.claire.traveldiary.edit;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.content.ClipData;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,21 +19,38 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.claire.traveldiary.R;
 import com.claire.traveldiary.edit.chooseweather.WeatherContract;
 import com.claire.traveldiary.edit.chooseweather.WeatherDialog;
 import com.claire.traveldiary.edit.chooseweather.WeatherPresenter;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import static android.app.Activity.RESULT_OK;
 import static android.support.v4.util.Preconditions.checkNotNull;
 
 public class EditFragment extends Fragment implements EditContract.View{
 
-    public static final int REQUEST = 1;
+    private static final String TAG = "EditFragment";
+
+    public static final int REQUEST = 100;
+    private static final int PICK_IMAGE_MULTIPLE = 5;
 
     private EditContract.Presenter mPresenter;
     private WeatherContract.Presenter mWeatherPresenter;
+
+    private RecyclerView mRecyclerEdit;
     private EditAdapter mEditAdapter;
+
+
+    //gallery
+    private ArrayList<String> mImagesList;
+    String imageEncoded;
+    ArrayList<String> imagesEncodedList;
 
     public EditFragment() {
     }
@@ -47,7 +69,6 @@ public class EditFragment extends Fragment implements EditContract.View{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mEditAdapter = new EditAdapter(mPresenter,getContext());
-
     }
 
     @Nullable
@@ -55,9 +76,10 @@ public class EditFragment extends Fragment implements EditContract.View{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_edit, container, false);
 
-        RecyclerView recyclerView = root.findViewById(R.id.recycler_edit);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mEditAdapter);
+        mRecyclerEdit = root.findViewById(R.id.recycler_edit);
+        mRecyclerEdit.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerEdit.setAdapter(mEditAdapter);
+
 
         return root;
     }
@@ -66,14 +88,90 @@ public class EditFragment extends Fragment implements EditContract.View{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.result(requestCode, resultCode);
 
-        if (requestCode == REQUEST) {
+        //receive weather data
+        if (requestCode == REQUEST && null != data) {
             String imageName = data.getStringExtra(WeatherDialog.IMAGE);
-            Log.d("EditFragment", imageName);
-            mEditAdapter.setWeatherIcon(imageName);
+            Log.d(TAG, "weather icon name: " + imageName);
+            mEditAdapter.updateWeather(imageName);
+        } else {
+            Log.d(TAG, "You haven't choose weather" );
+        }
+
+
+        //receive image data
+        try {
+             //When an Image is picked
+            if (requestCode == PICK_IMAGE_MULTIPLE && resultCode == RESULT_OK && null != data) {
+
+                if(data.getData()!=null) {
+                    mImagesList = new ArrayList<String>();
+
+                    // Get the Image from data
+                    Uri mImageUri = data.getData();
+                    Log.d(TAG, "onActivityResult: " + mImageUri);
+
+                    //real path
+                    String realPath = getRealPathFromURI(mImageUri);
+                    Log.d(TAG, "I get real path" + realPath);
+
+                    mImagesList.add(mImageUri.toString());
+                    mEditAdapter.updateImage(mImagesList);
+                }
+
+                if (data.getClipData() != null) {
+                    ClipData mClipData = data.getClipData();
+
+                    ArrayList<String> mArrayUri = new ArrayList<String>();
+                    for (int i = 0; i < mClipData.getItemCount(); i++) {
+
+                        ClipData.Item item = mClipData.getItemAt(i);
+                        Uri uri = item.getUri();
+                        mArrayUri.add(uri.toString());
+                        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+                        imagesEncodedList = new ArrayList<String>();
+                        // Get the cursor
+                        Cursor cursor = getActivity().getContentResolver().query(uri, filePathColumn, null, null, null);
+                        // Move to first row
+                        cursor.moveToFirst();
+
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        imageEncoded  = cursor.getString(columnIndex);
+                        imagesEncodedList.add(imageEncoded);
+                        cursor.close();
+
+                    }
+                    Log.d(TAG, "Selected Images" + mArrayUri.size());
+                    mEditAdapter.updateImage(mArrayUri);
+                }
+
+            } else {
+                Log.d(TAG, "You haven't picked Image" );
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Something went wrong.....", Toast.LENGTH_LONG).show();
         }
 
     }
+
+    public String getRealPathFromURI(Uri contentUri) {
+        Cursor cursor = getActivity().getContentResolver().query(contentUri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null
+                , MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        cursor.close();
+
+        return path;
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -105,6 +203,87 @@ public class EditFragment extends Fragment implements EditContract.View{
 
             dialog.show(getActivity().getSupportFragmentManager(), "WeatherDialog");
         }
+    }
+
+    @Override
+    public void openGalleryUi() {
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Picture"), PICK_IMAGE_MULTIPLE);
+    }
+
+    @Override
+    public void openDatePickerUi() {
+        Calendar calendar = Calendar.getInstance();
+        int yy = calendar.get(Calendar.YEAR);
+        int mm = calendar.get(Calendar.MONTH);
+        int dd = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                String monthEng = "";
+
+                if ((month+1) == 1) {
+                    monthEng = "January";
+                }
+                if ((month+1) == 2) {
+                    monthEng = "February";
+                }
+                if ((month+1) == 3) {
+                    monthEng = "March";
+                }
+                if ((month+1) == 4) {
+                    monthEng = "April";
+                }
+                if ((month+1) == 5) {
+                    monthEng = "May";
+                }
+                if ((month+1) == 6) {
+                    monthEng = "June";
+                }
+                if ((month+1) == 7) {
+                    monthEng = "July";
+                }
+                if ((month+1) == 8) {
+                    monthEng = "August";
+                }
+                if ((month+1) == 9) {
+                    monthEng = "September";
+                }
+                if ((month+1) == 10) {
+                    monthEng = "October";
+                }
+                if ((month+1) == 11) {
+                    monthEng = "November";
+                }
+                if ((month+1) == 12) {
+                    monthEng = "December";
+                }
+
+                String date = dayOfMonth+"th" + " " + monthEng + " " + year;
+                mEditAdapter.updateDate(date);
+            }
+        },yy, mm, dd);
+
+        //pickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        pickerDialog.show();
+
+    }
+
+    @Override
+    public void clickSaveDiaryUi() {
+        mEditAdapter.saveDiaryDataToRoom();
+    }
+
+    @Override
+    public void unEditDiaryUi() {
+        mEditAdapter.unEditDiary();
     }
 
 

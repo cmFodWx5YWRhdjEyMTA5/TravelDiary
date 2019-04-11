@@ -26,21 +26,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <TextView
         android:id="@+id/edit_diary_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@null"
-        android:ems="10"
+        android:text="@string/edit_diary_date_hint"
+        android:textSize="18sp"
         android:hint="@string/edit_diary_date_hint"
-        android:inputType="date"
+        android:textColorHint="@color/bottom_nav_item_normal"
         android:textColor="@color/diary_title"
         android:textStyle="bold"
-        android:typeface="normal"
-        android:layout_gravity="center_vertical"
         android:gravity="center"
-        android:cursorVisible="false"
         app:layout_constraintEnd_toEndOf="@+id/edit_diary_title"
         app:layout_constraintStart_toStartOf="@+id/edit_diary_title"
         app:layout_constraintTop_toBottomOf="@+id/edit_diary_title" />
@@ -70,16 +67,16 @@
     </android.support.v7.widget.RecyclerView>
 
     <fragment
-        android:id="@+id/autocomplete_fragment"
-        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/choose_weather"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_diary_date" />
+    android:id="@+id/autocomplete_fragment"
+    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    app:layout_constraintEnd_toStartOf="@+id/choose_weather"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/edit_diary_date" />
 
     <EditText
         android:id="@+id/edit_diary_content"
@@ -111,7 +108,7 @@
         android:drawablePadding="8dp"
         app:tagsBackground="@drawable/tags_border"
         app:tagsCloseImageRight="@mipmap/ic_close"
-        app:tagsPaddingTop="4dp"
+        app:tagsPaddingTop="3dp"
         app:tagsPaddingLeft="6dp"
         app:tagsPaddingRight="4dp"
         app:tagsCloseImagePadding="1dp"
