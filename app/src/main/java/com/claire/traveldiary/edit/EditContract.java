@@ -18,7 +18,9 @@ public interface EditContract {
 
         void clickSaveDiaryUi();
 
-        void unEditDiaryUi();
+        void openEditPageUi(Diary diary);
+
+        void clickEditDiaryUi();
 
 
     }
@@ -33,13 +35,11 @@ public interface EditContract {
 
         void openDatePicker();
 
-        void editDiary();
-
-        void unEditDiary();
-
         void clickSaveDiary();
 
-        void saveDiaryToRoom(Diary diary);
+        void loadDiaryData(Diary diary);
+
+        void clickEditDiary();
 
 
     }

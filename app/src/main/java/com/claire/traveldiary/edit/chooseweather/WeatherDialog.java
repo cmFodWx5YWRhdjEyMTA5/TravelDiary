@@ -2,6 +2,7 @@ package com.claire.traveldiary.edit.chooseweather;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -97,44 +98,50 @@ public class WeatherDialog extends DialogFragment implements WeatherContract.Vie
 
         switch (v.getId()) {
             case R.id.img_sunny:
-                setResult("ic_sunny");
+                Uri imageUri_sun = Uri.parse("android.resource://com.claire.traveldiary/" + R.mipmap.ic_sunny);
+                setResult(imageUri_sun.toString());
                 dismiss();
                 break;
 
             case R.id.img_cloud_sun:
-                setResult("ic_cloud_sun");
+                Uri imageUri_cloud_sun = Uri.parse("android.resource://com.claire.traveldiary/" + R.mipmap.ic_cloud_sun);
+                setResult(imageUri_cloud_sun.toString());
                 dismiss();
                 break;
 
             case R.id.img_cloudy:
-                setResult("ic_cloudy");
+                Uri imageUri_cloudy = Uri.parse("android.resource://com.claire.traveldiary/" + R.mipmap.ic_cloudy);
+                setResult(imageUri_cloudy.toString());
                 dismiss();
                 break;
 
             case R.id.img_windy:
-                setResult("ic_windy");
+                Uri imageUri_windy = Uri.parse("android.resource://com.claire.traveldiary/" + R.mipmap.ic_windy);
+                setResult(imageUri_windy.toString());
                 dismiss();
                 break;
 
             case R.id.img_rain:
-                setResult("ic_raining");
+                Uri imageUri_rainy = Uri.parse("android.resource://com.claire.traveldiary/" + R.mipmap.ic_raining);
+                setResult(imageUri_rainy.toString());
                 dismiss();
                 break;
 
             case R.id.img_snow:
-                setResult("ic_snowflake");
+                Uri imageUri_snow = Uri.parse("android.resource://com.claire.traveldiary/" + R.mipmap.ic_snowflake);
+                setResult(imageUri_snow.toString());
                 dismiss();
                 break;
         }
     }
 
-    protected void setResult(String id) {
+    protected void setResult(String imageUri) {
 
         if (getTargetFragment() == null) {
             return;
         } else {
             Intent intent = new Intent();
-            intent.putExtra(IMAGE, id);
+            intent.putExtra(IMAGE, imageUri);
             getTargetFragment().onActivityResult(EditFragment.REQUEST, Activity.RESULT_OK, intent);
         }
     }

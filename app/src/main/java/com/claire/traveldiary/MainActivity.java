@@ -1,7 +1,5 @@
 package com.claire.traveldiary;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +10,7 @@ import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 
 import com.claire.traveldiary.base.BaseActivity;
+import com.claire.traveldiary.data.Diary;
 import com.claire.traveldiary.edit.EditFragment;
 import com.claire.traveldiary.edit.EditPresenter;
 import com.claire.traveldiary.edit.chooseweather.WeatherPresenter;
@@ -24,8 +23,6 @@ import com.claire.traveldiary.settings.SettingsPresenter;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
-
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 300;
 
     private MainPagePresenter mMainPagePresenter;
     private EditPresenter mEditPresenter;
@@ -44,8 +41,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ImageButton mToolbarBack;
     private Button mToolbarEdit;
 
-    private boolean isEdit = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +49,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //startActivity(new Intent(this, LaunchActivity.class));
         init();
 
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (shouldShowRequestPermissionRationale(
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Explain to the user why we need to read the contacts
-            }
-
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            return;
-        }
     }
 
     private void init() {
@@ -100,24 +82,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.toolbar_back:
                 openMainPage();
-                updateToolbar(getResources().getString(R.string.toolbar_title));
+                updateMapToolbar(getResources().getString(R.string.toolbar_title));
                 break;
             case R.id.toolbar_menu:
                 openSettings();
-                updateToolbar("");
+                updateMapToolbar("");
                 break;
             case R.id.toolbar_edit:
-                if (!isEdit) {
-                    mToolbarEdit.setText("Done");
-                    isEdit = true;
-                    editDiary();
-                } else {
+                if (mToolbarEdit.getText().equals("Done")) {
                     mToolbarEdit.setText("Edit");
-                    isEdit = false;
                     clickSaveDiary();
-                    unEditDiary();
+                } else {
+                    mToolbarEdit.setText("Done");
+                    clickEditDiary();
                 }
-
                 break;
         }
 
@@ -141,25 +119,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         switch (item.getItemId()) {
             case R.id.navigation_main:
-
                 openMainPage();
-                updateToolbar(getResources().getString(R.string.toolbar_title));
+                updateMapToolbar(getResources().getString(R.string.toolbar_title));
                 return true;
 
             case R.id.navigation_edit:
-
                 openEdit();
-                updateToolbar("");
-                mToolbarEdit.setVisibility(View.VISIBLE);
-                mToolbarEdit.setText("Done");
-                isEdit = true;
+                updateEditToolbar("");
                 return true;
 
-
             case R.id.navigation_map:
-
                 openMap();
-                updateToolbar("");
+                updateMapToolbar("");
                 return true;
 
             default:
@@ -174,22 +145,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             MainPageFragment fragment = MainPageFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "MainPage").commit();
             mMainPagePresenter = new MainPagePresenter(fragment);
+            fragment.setPresenter(mMainPagePresenter);
         }
 
         showBottomNavigation();
     }
 
-    private void openEdit() {
+    public void openEdit() {
+
         EditFragment editFragment = (EditFragment) getSupportFragmentManager().findFragmentByTag("Edit");
 
         if (editFragment == null) {
             EditFragment fragment = EditFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "Edit").commit();
-            mEditPresenter = new EditPresenter(fragment, getApplicationContext());
+            mEditPresenter = new EditPresenter(fragment);
+            fragment.setPresenter(mEditPresenter);
         }
 
         hideBottomNavigation();
     }
+
 
     private void openMap() {
         MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("Map");
@@ -198,6 +173,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             MapFragment fragment = MapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "Map").commit();
             mMapPresenter = new MapPresenter(fragment);
+            fragment.setPresenter(mMapPresenter);
         }
 
         hideBottomNavigation();
@@ -215,7 +191,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void updateToolbar(String title) {
+    private void updateMapToolbar(String title) {
 
         if ("".equals(title)) {
             mToolbarTitle.setVisibility(View.GONE);
@@ -235,6 +211,46 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    public void updateEditToolbar(String title) {
+
+        if ("".equals(title)) {
+            mToolbarTitle.setVisibility(View.GONE);
+            mToolbarSearch.setVisibility(View.GONE);
+            mToolbarBack.setVisibility(View.VISIBLE);
+            mToolbarMenu.setVisibility(View.GONE);
+            mToolbarEdit.setVisibility(View.VISIBLE);
+            mToolbarEdit.setText("Done");
+
+        } else {
+            mToolbarTitle.setVisibility(View.VISIBLE);
+            mToolbarSearch.setVisibility(View.VISIBLE);
+            mToolbarBack.setVisibility(View.GONE);
+            mToolbarMenu.setVisibility(View.VISIBLE);
+            mToolbarTitle.setText(title);
+            mToolbarEdit.setVisibility(View.GONE);
+        }
+    }
+
+    public void updateEditToolbarFromMainPage(String title) {
+
+        if ("".equals(title)) {
+            mToolbarTitle.setVisibility(View.GONE);
+            mToolbarSearch.setVisibility(View.GONE);
+            mToolbarBack.setVisibility(View.VISIBLE);
+            mToolbarMenu.setVisibility(View.GONE);
+            mToolbarEdit.setVisibility(View.VISIBLE);
+            mToolbarEdit.setText("Edit");
+
+        } else {
+            mToolbarTitle.setVisibility(View.VISIBLE);
+            mToolbarSearch.setVisibility(View.VISIBLE);
+            mToolbarBack.setVisibility(View.GONE);
+            mToolbarMenu.setVisibility(View.VISIBLE);
+            mToolbarTitle.setText(title);
+            mToolbarEdit.setVisibility(View.GONE);
+        }
+    }
+
 
     public void hideBottomNavigation() {
         mBottomNavigation.setVisibility(View.GONE);
@@ -248,14 +264,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mEditPresenter.clickSaveDiary();
     }
 
-    public void editDiary() {
-        mEditPresenter.editDiary();
+    public void clickEditDiary() {
+        mEditPresenter.clickEditDiary();
     }
-
-    public void unEditDiary() {
-        mEditPresenter.unEditDiary();
-    }
-
 
     @Override
     public void onBackPressed() {

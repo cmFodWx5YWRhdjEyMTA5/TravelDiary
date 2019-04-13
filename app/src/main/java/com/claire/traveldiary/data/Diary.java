@@ -3,6 +3,7 @@ package com.claire.traveldiary.data;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import com.claire.traveldiary.data.room.ImagesConverter;
 import com.claire.traveldiary.data.room.PlacesConverter;
@@ -16,7 +17,8 @@ import java.util.List;
 public class Diary {
 
     @PrimaryKey(autoGenerate = true)
-    private long mId;
+    @NonNull
+    private int mId;
 
     private String mTitle;
 
@@ -38,22 +40,22 @@ public class Diary {
 
     public Diary() {
 
-        mId = -1L;
+        mId = -1;
         mTitle = "";
         mDate = "";
         mDiaryPlace = new DiaryPlace();
-        mWeather = "";
+        mWeather = "ic_sunny";
         mImages = new ArrayList<>();
         mContent = "";
         mTags = null;
     }
 
 
-    public long getId() {
+    public int getId() {
         return mId;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         mId = id;
     }
 

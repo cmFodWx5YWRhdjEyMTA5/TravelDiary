@@ -2,6 +2,8 @@ package com.claire.traveldiary.mainpage;
 
 import android.annotation.SuppressLint;
 
+import com.claire.traveldiary.data.Diary;
+
 import static android.support.v4.util.Preconditions.checkNotNull;
 
 public class MainPagePresenter implements MainPageContract.Presenter {
@@ -23,5 +25,10 @@ public class MainPagePresenter implements MainPageContract.Presenter {
     @Override
     public void result(int requestCode, int resultCode) {
 
+    }
+
+    @Override
+    public void openEdit(Diary diary) {
+        mView.openEditPage(diary);
     }
 }

@@ -1,9 +1,11 @@
 package com.claire.traveldiary.edit;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.claire.traveldiary.R;
+import com.claire.traveldiary.data.Diary;
 import com.claire.traveldiary.edit.chooseweather.WeatherContract;
 import com.claire.traveldiary.edit.chooseweather.WeatherDialog;
 import com.claire.traveldiary.edit.chooseweather.WeatherPresenter;
@@ -37,6 +40,7 @@ public class EditFragment extends Fragment implements EditContract.View{
 
     private static final String TAG = "EditFragment";
 
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 300;
     public static final int REQUEST = 100;
     private static final int PICK_IMAGE_MULTIPLE = 5;
 
@@ -46,11 +50,12 @@ public class EditFragment extends Fragment implements EditContract.View{
     private RecyclerView mRecyclerEdit;
     private EditAdapter mEditAdapter;
 
-
     //gallery
     private ArrayList<String> mImagesList;
     String imageEncoded;
     ArrayList<String> imagesEncodedList;
+
+    private Diary mDiary;
 
     public EditFragment() {
     }
@@ -68,7 +73,8 @@ public class EditFragment extends Fragment implements EditContract.View{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEditAdapter = new EditAdapter(mPresenter,getContext());
+        mEditAdapter = new EditAdapter(mPresenter,getContext(),mDiary);
+
     }
 
     @Nullable
@@ -80,10 +86,14 @@ public class EditFragment extends Fragment implements EditContract.View{
         mRecyclerEdit.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerEdit.setAdapter(mEditAdapter);
 
-
         return root;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mEditAdapter.showDiary(mDiary);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -93,7 +103,7 @@ public class EditFragment extends Fragment implements EditContract.View{
         //receive weather data
         if (requestCode == REQUEST && null != data) {
             String imageName = data.getStringExtra(WeatherDialog.IMAGE);
-            Log.d(TAG, "weather icon name: " + imageName);
+            Log.d(TAG, "weather icon uri: " + imageName);
             mEditAdapter.updateWeather(imageName);
         } else {
             Log.d(TAG, "You haven't choose weather" );
@@ -116,19 +126,22 @@ public class EditFragment extends Fragment implements EditContract.View{
                     String realPath = getRealPathFromURI(mImageUri);
                     Log.d(TAG, "I get real path" + realPath);
 
-                    mImagesList.add(mImageUri.toString());
+                    mImagesList.add(realPath);
                     mEditAdapter.updateImage(mImagesList);
                 }
 
                 if (data.getClipData() != null) {
                     ClipData mClipData = data.getClipData();
 
-                    ArrayList<String> mArrayUri = new ArrayList<String>();
+                    ArrayList<String> mArrayPath = new ArrayList<String>();
                     for (int i = 0; i < mClipData.getItemCount(); i++) {
 
                         ClipData.Item item = mClipData.getItemAt(i);
                         Uri uri = item.getUri();
-                        mArrayUri.add(uri.toString());
+
+                        String realPath = getRealPathFromURI(uri);
+
+                        mArrayPath.add(realPath);
                         String[] filePathColumn = { MediaStore.Images.Media.DATA };
                         imagesEncodedList = new ArrayList<String>();
                         // Get the cursor
@@ -142,8 +155,8 @@ public class EditFragment extends Fragment implements EditContract.View{
                         cursor.close();
 
                     }
-                    Log.d(TAG, "Selected Images" + mArrayUri.size());
-                    mEditAdapter.updateImage(mArrayUri);
+                    Log.d(TAG, "Selected Images" + mArrayPath.size());
+                    mEditAdapter.updateImage(mArrayPath);
                 }
 
             } else {
@@ -207,6 +220,20 @@ public class EditFragment extends Fragment implements EditContract.View{
 
     @Override
     public void openGalleryUi() {
+
+        if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Explain to the user why we need to read the contacts
+            }
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            return;
+
+        }
 
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -282,9 +309,27 @@ public class EditFragment extends Fragment implements EditContract.View{
     }
 
     @Override
-    public void unEditDiaryUi() {
-        mEditAdapter.unEditDiary();
+    public void openEditPageUi(Diary diary) {
+        mDiary = diary;
+        if(mEditAdapter == null) {
+            mEditAdapter = new EditAdapter(mPresenter,getContext(),diary);
+            mEditAdapter.showDiary(diary);
+            Log.d(TAG,"edit adapter is null" + diary.getTitle());
+        } else {
+            mEditAdapter.showDiary(diary);
+            Log.d(TAG,"edit adapter not null" + diary.getTitle());
+        }
+    }
+
+    @Override
+    public void clickEditDiaryUi() {
+        mEditAdapter.editDiary(mDiary.getId());
+        Log.d(TAG,"edit diary by id : " + mDiary.getId());
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

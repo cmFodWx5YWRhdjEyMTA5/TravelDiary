@@ -11,16 +11,34 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
+import com.claire.traveldiary.MainActivity;
 import com.claire.traveldiary.R;
 import com.claire.traveldiary.component.SpacesItemDecoration;
+import com.claire.traveldiary.data.Diary;
+import com.claire.traveldiary.data.room.DiaryDatabase;
+import com.claire.traveldiary.edit.EditFragment;
+import com.claire.traveldiary.edit.EditPresenter;
+
+import java.util.ArrayList;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
 public class MainPageFragment extends Fragment implements MainPageContract.View {
 
+    private static final String TAG = "MainPageFragment";
+
     private MainPageContract.Presenter mPresenter;
     private MainPageAdapter mMainPageAdapter;
+
+    private EditPresenter mEditPresenter;
+
+    private ArrayList<Diary> mDiaries;
+
+    private DiaryDatabase mDatabase;
+
+    private ImageButton mAddDiary;
 
 
     public MainPageFragment() {
@@ -45,13 +63,27 @@ public class MainPageFragment extends Fragment implements MainPageContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMainPageAdapter = new MainPageAdapter(mPresenter);
+        mMainPageAdapter = new MainPageAdapter(mPresenter,getContext());
+
+        mDatabase = DiaryDatabase.getIstance(getContext());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_mainpage, container, false);
+
+        mAddDiary = root.findViewById(R.id.btn_add_diary);
+
+        if (mDatabase.getDiaryDAO().getDiarys().size() > 0) {
+            mAddDiary.setVisibility(View.GONE);
+        } else {
+            mAddDiary.setVisibility(View.VISIBLE);
+            mAddDiary.setOnClickListener(v -> {
+                ((MainActivity) getActivity()).openEdit();
+                ((MainActivity) getActivity()).updateEditToolbar("");
+            });
+        }
 
         RecyclerView recyclerView = root.findViewById(R.id.recycler_main_page);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
@@ -60,5 +92,17 @@ public class MainPageFragment extends Fragment implements MainPageContract.View 
         recyclerView.addItemDecoration(new SpacesItemDecoration(2,40,true));
 
         return root;
+    }
+
+    @Override
+    public void openEditPage(Diary diary) {
+        ((MainActivity) getActivity()).updateEditToolbarFromMainPage("");
+        ((MainActivity) getActivity()).hideBottomNavigation();
+
+        EditFragment fragment = EditFragment.newInstance();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "Edit").commit();
+        mEditPresenter = new EditPresenter(fragment);
+        fragment.setPresenter(mEditPresenter);
+        mEditPresenter.loadDiaryData(diary);
     }
 }

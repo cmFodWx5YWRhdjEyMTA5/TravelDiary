@@ -10,7 +10,20 @@ import com.claire.traveldiary.data.Diary;
 @Database(entities = {Diary.class}, version = 1, exportSchema = false)
 public abstract class DiaryDatabase extends RoomDatabase {
 
+    private static DiaryDatabase INSTANCE;
 
     public abstract DiaryDAO getDiaryDAO();
+
+    public static DiaryDatabase getIstance(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE =
+                    Room.databaseBuilder(context.getApplicationContext(), DiaryDatabase.class, "diary_db").allowMainThreadQueries().build();
+        }
+        return INSTANCE;
+    }
+
+    public static void destroyInstance() {
+        INSTANCE = null;
+    }
 
 }

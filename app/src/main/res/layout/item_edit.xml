@@ -103,19 +103,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        app:allowSpaceInTag="true"
         android:drawableLeft="@mipmap/ic_tags"
         android:drawablePadding="8dp"
-        app:tagsBackground="@drawable/tags_border"
-        app:tagsCloseImageRight="@mipmap/ic_close"
-        app:tagsPaddingTop="3dp"
-        app:tagsPaddingLeft="6dp"
-        app:tagsPaddingRight="4dp"
-        app:tagsCloseImagePadding="1dp"
+        app:allowSpaceInTag="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/edit_diary_content"
         app:layout_constraintStart_toStartOf="@+id/edit_diary_content"
-        app:layout_constraintTop_toBottomOf="@+id/edit_diary_content" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_diary_content"
+        app:tagsBackground="@drawable/tags_border"
+        app:tagsCloseImagePadding="1dp"
+        app:tagsCloseImageRight="@mipmap/ic_close"
+        app:tagsPaddingLeft="6dp"
+        app:tagsPaddingRight="4dp"
+        app:tagsPaddingTop="3dp" />
 
 
 

@@ -1,6 +1,9 @@
 package com.claire.traveldiary.edit;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.claire.traveldiary.R;
+import com.claire.traveldiary.TravelDiaryApplication;
 
 import java.util.ArrayList;
 
@@ -68,7 +72,7 @@ public class GalleryAdapter extends RecyclerView.Adapter {
                 for(int i = 0; i < mImages.size(); i++) {
 
                     ((GalleryViewHolder) holder).mButtonAdd.setVisibility(View.INVISIBLE);
-                    ((GalleryViewHolder) holder).mImageGallery.setImageURI(Uri.parse(mImages.get(position)));
+                    ((GalleryViewHolder) holder).mImageGallery.setImageBitmap(BitmapFactory.decodeFile(mImages.get(position)));
                 }
             }
         }
