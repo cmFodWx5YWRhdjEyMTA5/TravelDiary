@@ -10,6 +10,8 @@ public interface MainPageContract {
 
         void openEditPage(Diary diary);
 
+        void deleteDiaryUi(int id);
+
     }
 
     interface Presenter extends BasePresenter {
@@ -17,6 +19,8 @@ public interface MainPageContract {
         void result(int requestCode, int resultCode);
 
         void openEdit(Diary diary);
+
+        void deleteDiary(int id);
 
     }
 }

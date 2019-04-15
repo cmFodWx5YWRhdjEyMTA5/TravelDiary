@@ -17,6 +17,7 @@ import com.claire.traveldiary.MainActivity;
 import com.claire.traveldiary.R;
 import com.claire.traveldiary.component.SpacesItemDecoration;
 import com.claire.traveldiary.data.Diary;
+import com.claire.traveldiary.data.room.DiaryDAO;
 import com.claire.traveldiary.data.room.DiaryDatabase;
 import com.claire.traveldiary.edit.EditFragment;
 import com.claire.traveldiary.edit.EditPresenter;
@@ -81,7 +82,6 @@ public class MainPageFragment extends Fragment implements MainPageContract.View 
             mAddDiary.setVisibility(View.VISIBLE);
             mAddDiary.setOnClickListener(v -> {
                 ((MainActivity) getActivity()).openEdit();
-                ((MainActivity) getActivity()).updateEditToolbar("");
             });
         }
 
@@ -96,13 +96,13 @@ public class MainPageFragment extends Fragment implements MainPageContract.View 
 
     @Override
     public void openEditPage(Diary diary) {
-        ((MainActivity) getActivity()).updateEditToolbarFromMainPage("");
-        ((MainActivity) getActivity()).hideBottomNavigation();
+        ((MainActivity) getActivity()).openEditFromMainPage(diary);
+    }
 
-        EditFragment fragment = EditFragment.newInstance();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "Edit").commit();
-        mEditPresenter = new EditPresenter(fragment);
-        fragment.setPresenter(mEditPresenter);
-        mEditPresenter.loadDiaryData(diary);
+    @Override
+    public void deleteDiaryUi(int id) {
+        DiaryDAO diaryDAO = mDatabase.getDiaryDAO();
+        diaryDAO.deleteDiarybyId(id);
+        mMainPageAdapter.deleteDiary(id);
     }
 }

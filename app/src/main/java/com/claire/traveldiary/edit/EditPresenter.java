@@ -58,7 +58,6 @@ public class EditPresenter implements EditContract.Presenter {
     @Override
     public void loadDiaryData(Diary diary) {
         mView.openEditPageUi(diary);
-
     }
 
     @Override

@@ -31,4 +31,9 @@ public class MainPagePresenter implements MainPageContract.Presenter {
     public void openEdit(Diary diary) {
         mView.openEditPage(diary);
     }
+
+    @Override
+    public void deleteDiary(int id) {
+        mView.deleteDiaryUi(id);
+    }
 }

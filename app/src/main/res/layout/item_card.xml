@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_space"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/white">
@@ -36,7 +37,7 @@
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
                 android:background="@drawable/card_img_rounded"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:src="@drawable/images"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

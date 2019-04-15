@@ -23,6 +23,6 @@
     <color name="toolbar_text">#808080</color>
 
     <!-- Gallery -->
-    <color name="gallery_background">#F5F5F5</color>
+    <color name="gallery_background">#F8F8FF</color>
 
 </resources>

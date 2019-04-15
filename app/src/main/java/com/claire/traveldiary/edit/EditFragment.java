@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.claire.traveldiary.MainActivity;
 import com.claire.traveldiary.R;
 import com.claire.traveldiary.data.Diary;
 import com.claire.traveldiary.edit.chooseweather.WeatherContract;
@@ -56,6 +57,7 @@ public class EditFragment extends Fragment implements EditContract.View{
     ArrayList<String> imagesEncodedList;
 
     private Diary mDiary;
+    private Diary mNewDiary;
 
     public EditFragment() {
     }
@@ -323,13 +325,18 @@ public class EditFragment extends Fragment implements EditContract.View{
 
     @Override
     public void clickEditDiaryUi() {
-        mEditAdapter.editDiary(mDiary.getId());
-        Log.d(TAG,"edit diary by id : " + mDiary.getId());
+        if (mDiary != null) {
+            mEditAdapter.editDiary(mDiary);
+            Log.d(TAG,"edit diary by id ! " + mDiary.getId());
+        } else {
+            mEditAdapter.editNewDiary(mNewDiary);
+        }
     }
 
 
     @Override
     public void onDestroy() {
+        Log.d(TAG,"edit fragment destroy ! ");
         super.onDestroy();
     }
 }

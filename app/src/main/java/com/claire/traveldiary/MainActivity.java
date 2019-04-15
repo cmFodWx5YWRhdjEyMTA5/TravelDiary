@@ -3,6 +3,7 @@ package com.claire.traveldiary;
 import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -40,6 +41,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ImageButton mToolbarMenu;
     private ImageButton mToolbarBack;
     private Button mToolbarEdit;
+    private Button mToolbarDone;
 
 
     @Override
@@ -71,6 +73,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mToolbarEdit = findViewById(R.id.toolbar_edit);
         mToolbarEdit.setOnClickListener(this);
 
+        mToolbarDone = findViewById(R.id.toolbar_done);
+        mToolbarDone.setOnClickListener(this);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
         mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
@@ -89,13 +94,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 updateMapToolbar("");
                 break;
             case R.id.toolbar_edit:
-                if (mToolbarEdit.getText().equals("Done")) {
-                    mToolbarEdit.setText("Edit");
-                    clickSaveDiary();
-                } else {
-                    mToolbarEdit.setText("Done");
-                    clickEditDiary();
-                }
+                clickEditDiary();
+                mToolbarEdit.setVisibility(View.GONE);
+                mToolbarDone.setVisibility(View.VISIBLE);
+                break;
+            case R.id.toolbar_done:
+                clickSaveDiary();
+                mToolbarEdit.setVisibility(View.VISIBLE);
+                mToolbarDone.setVisibility(View.GONE);
                 break;
         }
 
@@ -161,7 +167,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mEditPresenter = new EditPresenter(fragment);
             fragment.setPresenter(mEditPresenter);
         }
+        updateEditToolbar("");
+        hideBottomNavigation();
+    }
 
+    public void openEditFromMainPage(Diary diary) {
+
+        EditFragment editFragment = (EditFragment) getSupportFragmentManager().findFragmentByTag("EditFromMain");
+
+        if (editFragment == null) {
+            EditFragment fragment = EditFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.layout_container, fragment, "EditFromMain").commit();
+            mEditPresenter = new EditPresenter(fragment);
+            fragment.setPresenter(mEditPresenter);
+            mEditPresenter.loadDiaryData(diary);
+        }
+
+        updateEditToolbarFromMainPage("");
         hideBottomNavigation();
     }
 
@@ -178,6 +200,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         hideBottomNavigation();
     }
+
 
     private void openSettings() {
 
@@ -206,6 +229,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mToolbarBack.setVisibility(View.GONE);
             mToolbarMenu.setVisibility(View.VISIBLE);
             mToolbarTitle.setText(title);
+            mToolbarDone.setVisibility(View.GONE);
             mToolbarEdit.setVisibility(View.GONE);
 
         }
@@ -218,8 +242,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mToolbarSearch.setVisibility(View.GONE);
             mToolbarBack.setVisibility(View.VISIBLE);
             mToolbarMenu.setVisibility(View.GONE);
-            mToolbarEdit.setVisibility(View.VISIBLE);
-            mToolbarEdit.setText("Done");
+            mToolbarEdit.setVisibility(View.GONE);
+            mToolbarDone.setVisibility(View.VISIBLE);
 
         } else {
             mToolbarTitle.setVisibility(View.VISIBLE);
@@ -227,6 +251,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mToolbarBack.setVisibility(View.GONE);
             mToolbarMenu.setVisibility(View.VISIBLE);
             mToolbarTitle.setText(title);
+            mToolbarDone.setVisibility(View.GONE);
             mToolbarEdit.setVisibility(View.GONE);
         }
     }
@@ -238,8 +263,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mToolbarSearch.setVisibility(View.GONE);
             mToolbarBack.setVisibility(View.VISIBLE);
             mToolbarMenu.setVisibility(View.GONE);
+            mToolbarDone.setVisibility(View.GONE);
             mToolbarEdit.setVisibility(View.VISIBLE);
-            mToolbarEdit.setText("Edit");
 
         } else {
             mToolbarTitle.setVisibility(View.VISIBLE);
@@ -247,6 +272,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mToolbarBack.setVisibility(View.GONE);
             mToolbarMenu.setVisibility(View.VISIBLE);
             mToolbarTitle.setText(title);
+            mToolbarDone.setVisibility(View.GONE);
             mToolbarEdit.setVisibility(View.GONE);
         }
     }

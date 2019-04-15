@@ -10,21 +10,21 @@
         android:id="@+id/edit_diary_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="@null"
+        android:cursorVisible="false"
+        android:gravity="center"
         android:hint="@string/edit_diary_title_hint"
         android:singleLine="true"
         android:textColor="@color/diary_title"
-        android:textStyle="bold"
-        android:typeface="sans"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:cursorVisible="false"
+        android:textSize="20sp"
+        android:typeface="serif"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/recycler_gallery" />
 
     <TextView
         android:id="@+id/edit_diary_date"
@@ -32,12 +32,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/edit_diary_date_hint"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:hint="@string/edit_diary_date_hint"
         android:textColorHint="@color/bottom_nav_item_normal"
         android:textColor="@color/diary_title"
-        android:textStyle="bold"
         android:gravity="center"
+        android:typeface="serif"
         app:layout_constraintEnd_toEndOf="@+id/edit_diary_title"
         app:layout_constraintStart_toStartOf="@+id/edit_diary_title"
         app:layout_constraintTop_toBottomOf="@+id/edit_diary_title" />
@@ -46,37 +46,58 @@
         android:id="@+id/choose_weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:src="@mipmap/ic_sunny"
         android:background="@null"
+        android:src="@mipmap/ic_sunny"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_my_location"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_diary_date" />
+        app:layout_constraintTop_toTopOf="@+id/tv_my_location" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_gallery"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/choose_weather">
+        app:layout_constraintTop_toTopOf="parent">
 
     </android.support.v7.widget.RecyclerView>
 
-    <fragment
-    android:id="@+id/autocomplete_fragment"
-    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    app:layout_constraintEnd_toStartOf="@+id/choose_weather"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/edit_diary_date" />
+    <android.support.v7.widget.CardView
+        android:id="@+id/autocomplete_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/choose_weather"
+        app:layout_constraintStart_toStartOf="@+id/tv_my_location"
+        app:layout_constraintTop_toBottomOf="@+id/tv_my_location">
+
+        <fragment
+            android:id="@+id/autocomplete_fragment"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.v7.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/tv_my_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/pin"
+        android:drawablePadding="5dp"
+        android:text="Where am I ?"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_diary_date" />
 
     <EditText
         android:id="@+id/edit_diary_content"
@@ -84,18 +105,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:autoLink="all"
-        android:background="#F5F5F5"
+        android:background="@drawable/diary_content_border"
         android:hint="@string/edit_diary_content_hint"
         android:includeFontPadding="true"
-        android:lineSpacingExtra="1.2dp"
-        android:paddingLeft="8dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:inputType="textMultiLine"
+        android:lineSpacingExtra="1.5dp"
+        android:minLines="3"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
         android:textAppearance="?android:attr/textAppearanceLargeInverse"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_gallery"
-        app:layout_constraintStart_toStartOf="@+id/recycler_gallery"
-        app:layout_constraintTop_toBottomOf="@+id/recycler_gallery" />
+        android:textColor="@color/diary_title"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/choose_weather"
+        app:layout_constraintStart_toStartOf="@+id/tv_my_location"
+        app:layout_constraintTop_toBottomOf="@+id/autocomplete_card" />
 
     <mabbas007.tagsedittext.TagsEditText
         android:id="@+id/edit_tags"
@@ -105,6 +130,7 @@
         android:layout_marginBottom="16dp"
         android:drawableLeft="@mipmap/ic_tags"
         android:drawablePadding="8dp"
+        android:textSize="14sp"
         app:allowSpaceInTag="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/edit_diary_content"
@@ -116,7 +142,6 @@
         app:tagsPaddingLeft="6dp"
         app:tagsPaddingRight="4dp"
         app:tagsPaddingTop="3dp" />
-
 
 
 </android.support.constraint.ConstraintLayout>

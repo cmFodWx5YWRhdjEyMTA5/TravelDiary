@@ -11,16 +11,19 @@ import com.google.android.gms.maps.model.LatLng;
 public class DiaryPlace {
 
     @PrimaryKey
+    @NonNull
     private String mPlaceId;
 
     private String mPlaceName;
-    private LatLng mLatLng;
+    private double mLat;
+    private double mLng;
 
     public DiaryPlace() {
 
         mPlaceId = "";
         mPlaceName = "";
-        mLatLng = null;
+        mLat = -1L;
+        mLng = -1L;
     }
 
     public String getPlaceId() {
@@ -39,11 +42,19 @@ public class DiaryPlace {
         mPlaceName = placeName;
     }
 
-    public LatLng getLatLng() {
-        return mLatLng;
+    public double getLat() {
+        return mLat;
     }
 
-    public void setLatLng(LatLng latLng) {
-        mLatLng = latLng;
+    public void setLat(double lat) {
+        mLat = lat;
+    }
+
+    public double getLng() {
+        return mLng;
+    }
+
+    public void setLng(double lng) {
+        mLng = lng;
     }
 }

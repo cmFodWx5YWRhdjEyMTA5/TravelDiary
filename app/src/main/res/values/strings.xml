@@ -4,7 +4,8 @@
     //main page
     <string name="toolbar_title">Memories</string>
     <string name="search_hint">search here....</string>
-    <string name="toolbar_edit">Done</string>
+    <string name="toolbar_edit">Edit</string>
+    <string name="toolbar_done">Done</string>
 
     //item_card
     <string name="diary_title">Travel</string>
