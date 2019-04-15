@@ -103,6 +103,6 @@ public class MainPageFragment extends Fragment implements MainPageContract.View 
     public void deleteDiaryUi(int id) {
         DiaryDAO diaryDAO = mDatabase.getDiaryDAO();
         diaryDAO.deleteDiarybyId(id);
-        mMainPageAdapter.deleteDiary(id);
+        //mMainPageAdapter.updateData();
     }
 }

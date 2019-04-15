@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import com.claire.traveldiary.R;
 import com.claire.traveldiary.data.room.DiaryDAO;
 import com.claire.traveldiary.data.room.DiaryDatabase;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -91,19 +91,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, MapCont
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-//        try {
-//            // Customise the styling of the base map using a JSON object defined
-//            // in a raw resource file.
-//            boolean success = googleMap.setMapStyle(
-//                    MapStyleOptions.loadRawResourceStyle(
-//                            getActivity(), R.raw.style_json));
-//
-//            if (!success) {
-//                Log.e(TAG, "Style parsing failed.");
-//            }
-//        } catch (Resources.NotFoundException e) {
-//            Log.e(TAG, "Can't find style. Error: ", e);
-//        }
+        //map style
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            getActivity(), R.raw.mapstyle_retro));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
 
         //database
         DiaryDAO diaryDAO = mDatabase.getDiaryDAO();
@@ -118,7 +119,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, MapCont
 
             LatLng location = new LatLng(diaryDAO.getDiarys().get(i).getDiaryPlace().getLat(), diaryDAO.getDiarys().get(i).getDiaryPlace().getLng());
 
-            mMap.addMarker(new MarkerOptions().position(location)
+            mMap.addMarker(new MarkerOptions()
+                    .position(location)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin))
+                    .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
                     .title(diaryDAO.getDiarys().get(i).getDiaryPlace().getPlaceName()));
 
             //mMarkerArray.add(marker);

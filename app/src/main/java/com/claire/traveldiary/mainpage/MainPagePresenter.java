@@ -3,12 +3,16 @@ package com.claire.traveldiary.mainpage;
 import android.annotation.SuppressLint;
 
 import com.claire.traveldiary.data.Diary;
+import com.claire.traveldiary.data.room.DiaryDAO;
+import com.claire.traveldiary.data.room.DiaryDatabase;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
 public class MainPagePresenter implements MainPageContract.Presenter {
 
     private MainPageContract.View mView;
+
+    private DiaryDatabase mDatabase;
 
     @SuppressLint("RestrictedApi")
     public MainPagePresenter(MainPageContract.View view) {

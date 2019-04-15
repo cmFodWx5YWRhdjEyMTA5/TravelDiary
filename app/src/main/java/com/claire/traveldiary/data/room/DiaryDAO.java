@@ -37,15 +37,15 @@ public interface DiaryDAO {
 
 
     @TypeConverters({ImagesConverter.class, TagsConverter.class, PlacesConverter.class})
-    @Query("UPDATE diary SET mTitle = :title, mDate = :date, mDiaryPlace = :diaryPlace, mWeather = :weather, mImages = :images, mContent = :content WHERE mId = :id")
-    void updateDiary(int id, String title, String date, DiaryPlace diaryPlace, String weather, ArrayList<String> images, String content);
+    @Query("UPDATE diary SET mTitle = :title, mDate = :date, mDiaryPlace = :diaryPlace, mWeather = :weather, mImages = :images, mContent = :content, mTags = :tags WHERE mId = :id")
+    void updateDiary(int id, String title, String date, DiaryPlace diaryPlace, String weather, ArrayList<String> images, String content, List<String> tags);
 
 
     default void insertOrUpdate(Diary diary) {
         Diary diaryFromDB = getDiarybyId(diary.getId());
 
         if (diaryFromDB != null)
-            updateDiary(diary.getId(), diary.getTitle(), diary.getDate(), diary.getDiaryPlace(), diary.getWeather(), diary.getImages(), diary.getContent());
+            updateDiary(diary.getId(), diary.getTitle(), diary.getDate(), diary.getDiaryPlace(), diary.getWeather(), diary.getImages(), diary.getContent(), diary.getTags());
         else
             insert(diary);
     }

@@ -13,12 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.claire.traveldiary.R;
 import com.claire.traveldiary.data.Diary;
 import com.claire.traveldiary.data.room.DiaryDAO;
 import com.claire.traveldiary.data.room.DiaryDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainPageAdapter extends RecyclerView.Adapter {
@@ -123,7 +125,10 @@ public class MainPageAdapter extends RecyclerView.Adapter {
                     ((MainPageViewHolder) holder).mDelete.setVisibility(View.VISIBLE);
                     ((MainPageViewHolder) holder).mDelete.setOnClickListener(v1 -> {
                         mPresenter.deleteDiary(mDiaryList.get(position).getId());
-                        Log.d(TAG, "Oh Delete.....");
+                        mDiaryList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyDataSetChanged();
+                        Toast.makeText(v.getContext(), "Delete Diary", Toast.LENGTH_SHORT).show();
                         ((MainPageViewHolder) holder).mMainImage.setAlpha(0.9f);
                         ((MainPageViewHolder) holder).mDelete.setVisibility(View.GONE);
                         ((MainPageViewHolder) holder).mShare.setVisibility(View.GONE);
@@ -150,10 +155,8 @@ public class MainPageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void deleteDiary(int id) {
-//        mDiaryList.remove(id);
-//        notifyItemRemoved(id);
-//        notifyItemRangeChanged(id, getItemCount());
+    public void updateData(ArrayList<Diary> diaries) {
+        mDiaryList = diaries;
         notifyDataSetChanged();
     }
 

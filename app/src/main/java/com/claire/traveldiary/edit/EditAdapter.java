@@ -165,6 +165,8 @@ public class EditAdapter extends RecyclerView.Adapter {
 
                         ((EditViewHolder) holder).mContent.setText(mDiary.getContent());
                         //tags haven't done
+
+
                     } else {
                         Log.d(TAG, "diary is null!");
                         Log.d(TAG, "new diary!");
@@ -216,11 +218,8 @@ public class EditAdapter extends RecyclerView.Adapter {
                             chooseLocation();
                         });
 
-
                         //set tags haven't done
-                        if (mTagsList != null) {
-                            mTagsList.add(((EditViewHolder) holder).mTags.getText().toString());
-                        }
+
                     }
                 } else {
                     Log.d(TAG, "edit diary!" + mEditDiary.getId());
@@ -281,11 +280,7 @@ public class EditAdapter extends RecyclerView.Adapter {
                     mEditContent = ((EditViewHolder) holder).mContent.getText().toString();
 
                     //choose tags
-                    //                if (mTagsList == null) {
-                    //                    ((EditViewHolder) holder).mTags.setTags(mEditDiary.getTags().toString());
-                    //                } else {
-                    //                    mTagsList.add(((EditViewHolder) holder).mTags.getText().toString());
-                    //                }
+
                 }
             }
         }
@@ -309,13 +304,13 @@ public class EditAdapter extends RecyclerView.Adapter {
 
         private void chooseLocation() {
             // Initialize Places.
-            Places.initialize(mContext, "AIzaSyBJPVkA_f-Tp2PvzTWQ2p-_IOetu6g-9Q0");
+            Places.initialize(mContext, "");
 
             // Create a new Places client instance.
             PlacesClient placesClient = Places.createClient(mContext);
 
             if (!Places.isInitialized()) {
-                Places.initialize(TravelDiaryApplication.getAppContext(), "AIzaSyBJPVkA_f-Tp2PvzTWQ2p-_IOetu6g-9Q0");
+                Places.initialize(TravelDiaryApplication.getAppContext(), "");
             }
 
             AutocompleteSupportFragment supportFragment = (AutocompleteSupportFragment)
@@ -375,6 +370,7 @@ public class EditAdapter extends RecyclerView.Adapter {
                 newOrUpdateDiary.setImages(mEditDiary.getImages());
                 newOrUpdateDiary.setContent(mEditContent);
                 newOrUpdateDiary.setTags(mTagsList);
+
             } else {
                 Log.d(TAG, "no id");
                 newOrUpdateDiary.setId(id);
@@ -385,6 +381,8 @@ public class EditAdapter extends RecyclerView.Adapter {
                 newOrUpdateDiary.setImages(mImagesList);
                 newOrUpdateDiary.setContent(mEditContent);
                 newOrUpdateDiary.setTags(mTagsList);
+
+                Log.d(TAG, "tagssss" + newOrUpdateDiary.getTags());
             }
 
             diaryDAO.insertOrUpdate(newOrUpdateDiary);
